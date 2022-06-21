@@ -62,7 +62,7 @@ public class MediaPlayer {
         frame.setContentPane(contentPane);
         frame.setVisible(true);
 
-        String path = "http://llamitaweb.com.br/videoplayback.mp4?raw=true";
+        String path = "https://github.com/monialodo/Skytef/blob/master/TerceiraQuestao/videoplayback.mp4?raw=true";
         try {
             mediaPlayerComponent.mediaPlayer().fullScreen().set(true);
             mediaPlayerComponent.mediaPlayer().media().play(path);
