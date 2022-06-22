@@ -5,15 +5,14 @@ import uk.co.caprica.vlcj.player.embedded.fullscreen.adaptive.AdaptiveFullScreen
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MediaPlayer {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args)  {
         MediaPlayer mediaPlayer = new MediaPlayer();
     }
 
@@ -22,7 +21,7 @@ public class MediaPlayer {
     private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
 
-    public MediaPlayer() throws FileNotFoundException {
+    public MediaPlayer()  {
         frame = new JFrame("My Media Player");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,11 +37,11 @@ public class MediaPlayer {
         contentPane.setLayout(new BorderLayout());
 
         mediaPlayerComponent = new EmbeddedMediaPlayerComponent(
-            null,
-            null,
-            new AdaptiveFullScreenStrategy(frame),
-            null,
-            null
+                null,
+                null,
+                new AdaptiveFullScreenStrategy(frame),
+                null,
+                null
         );
         contentPane.add(mediaPlayerComponent, BorderLayout.CENTER);
         JPanel controlsPane = new JPanel();
@@ -52,23 +51,29 @@ public class MediaPlayer {
         contentPane.add(controlsPane, BorderLayout.SOUTH);
 
 
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        closeButton.addActionListener(e -> frame.dispose());
 
         frame.setContentPane(contentPane);
         frame.setVisible(true);
 
-        String path = "https://github.com/monialodo/Skytef/blob/master/TerceiraQuestao/videoplayback.mp4?raw=true";
+
+        String path = "https://github.com/monialodo/TesteJava/blob/main/TerceiraQuestao/videoplayback.mp4?raw=true";
         try {
-            mediaPlayerComponent.mediaPlayer().fullScreen().set(true);
-            mediaPlayerComponent.mediaPlayer().media().play(path);
+            final URL url = new URL(path);
+            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+            int responseCode = huc.getResponseCode();
+            if (responseCode == 200) {
+                mediaPlayerComponent.mediaPlayer().fullScreen().set(true);
+                mediaPlayerComponent.mediaPlayer().media().play(path);
+
+            } else {
+                throw new Exception("");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new FileNotFoundException("File not found");
+            JOptionPane.showMessageDialog(null,
+                    "Arquivo não encontrado");
         }
     }
+
 }
